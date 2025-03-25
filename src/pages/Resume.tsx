@@ -3,8 +3,10 @@ import React from "react";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Button } from "@/components/ui/button";
-import { Download } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import { Download, Briefcase, GraduationCap, Lightbulb, Code, MessageSquare } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Slider } from "@/components/ui/slider";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const experiences = [
   {
@@ -52,6 +54,22 @@ const education = [
   },
 ];
 
+const technicalSkills = [
+  { name: "Frontend Development", value: 90 },
+  { name: "Backend Development", value: 80 },
+  { name: "Mobile Development", value: 70 },
+  { name: "Database Design", value: 85 },
+  { name: "UI/UX Design", value: 75 }
+];
+
+const softSkills = [
+  { name: "Communication", value: 95 },
+  { name: "Teamwork", value: 90 },
+  { name: "Problem Solving", value: 85 },
+  { name: "Time Management", value: 80 },
+  { name: "Leadership", value: 85 }
+];
+
 const Resume = () => {
   return (
     <PageLayout>
@@ -64,7 +82,7 @@ const Resume = () => {
               className="mt-6 md:mt-12"
             />
             <div className="hidden md:block">
-              <Button size="lg" className="group">
+              <Button size="lg" className="group hover:scale-105 transition-transform duration-300">
                 <Download className="mr-2 h-4 w-4" />
                 Download CV
               </Button>
@@ -79,11 +97,18 @@ const Resume = () => {
           </div>
 
           <div className="mt-12 space-y-16">
-            <div>
-              <h3 className="text-2xl font-display font-semibold mb-6">Experience</h3>
+            {/* Experience Section */}
+            <div className="animate-fade-in">
+              <div className="flex items-center gap-3 mb-6">
+                <Briefcase className="h-6 w-6 text-primary" />
+                <h3 className="text-2xl font-display font-semibold">Experience</h3>
+              </div>
               <div className="space-y-6">
-                {experiences.map((exp) => (
-                  <Card key={exp.id} className="p-6 border transition-all hover:border-primary/50">
+                {experiences.map((exp, index) => (
+                  <Card 
+                    key={exp.id} 
+                    className="p-6 border transition-all hover:border-primary/50 hover:shadow-lg hover:-translate-y-1 duration-300"
+                  >
                     <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-4">
                       <div>
                         <div className="text-sm text-muted-foreground">{exp.period}</div>
@@ -91,7 +116,7 @@ const Resume = () => {
                       </div>
                       <div>
                         <h4 className="text-lg font-semibold">{exp.title}</h4>
-                        <div className="text-primary">{exp.company}</div>
+                        <div className="text-primary font-medium">{exp.company}</div>
                         <p className="mt-2 text-muted-foreground">{exp.description}</p>
                       </div>
                     </div>
@@ -100,11 +125,18 @@ const Resume = () => {
               </div>
             </div>
 
-            <div>
-              <h3 className="text-2xl font-display font-semibold mb-6">Education</h3>
+            {/* Education Section */}
+            <div className="animate-fade-in">
+              <div className="flex items-center gap-3 mb-6">
+                <GraduationCap className="h-6 w-6 text-primary" />
+                <h3 className="text-2xl font-display font-semibold">Education</h3>
+              </div>
               <div className="space-y-6">
                 {education.map((edu) => (
-                  <Card key={edu.id} className="p-6 border transition-all hover:border-primary/50">
+                  <Card 
+                    key={edu.id} 
+                    className="p-6 border transition-all hover:border-primary/50 hover:shadow-lg hover:-translate-y-1 duration-300"
+                  >
                     <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-4">
                       <div>
                         <div className="text-sm text-muted-foreground">{edu.period}</div>
@@ -112,7 +144,7 @@ const Resume = () => {
                       </div>
                       <div>
                         <h4 className="text-lg font-semibold">{edu.degree}</h4>
-                        <div className="text-primary">{edu.institution}</div>
+                        <div className="text-primary font-medium">{edu.institution}</div>
                         <p className="mt-2 text-muted-foreground">{edu.description}</p>
                       </div>
                     </div>
@@ -121,92 +153,69 @@ const Resume = () => {
               </div>
             </div>
 
-            <div>
-              <h3 className="text-2xl font-display font-semibold mb-6">Skills</h3>
+            {/* Skills Section */}
+            <div className="animate-fade-in">
+              <div className="flex items-center gap-3 mb-6">
+                <Lightbulb className="h-6 w-6 text-primary" />
+                <h3 className="text-2xl font-display font-semibold">Skills</h3>
+              </div>
+              
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div>
-                  <h4 className="text-lg font-semibold mb-4">Technical Skills</h4>
-                  <div className="space-y-3">
-                    <div>
-                      <div className="flex justify-between mb-1">
-                        <span className="text-sm font-medium">Frontend Development</span>
-                        <span className="text-sm text-muted-foreground">90%</span>
-                      </div>
-                      <div className="w-full bg-accent h-2 rounded-full overflow-hidden">
-                        <div className="bg-primary h-full rounded-full" style={{ width: "90%" }}></div>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex justify-between mb-1">
-                        <span className="text-sm font-medium">Backend Development</span>
-                        <span className="text-sm text-muted-foreground">80%</span>
-                      </div>
-                      <div className="w-full bg-accent h-2 rounded-full overflow-hidden">
-                        <div className="bg-primary h-full rounded-full" style={{ width: "80%" }}></div>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex justify-between mb-1">
-                        <span className="text-sm font-medium">Mobile Development</span>
-                        <span className="text-sm text-muted-foreground">70%</span>
-                      </div>
-                      <div className="w-full bg-accent h-2 rounded-full overflow-hidden">
-                        <div className="bg-primary h-full rounded-full" style={{ width: "70%" }}></div>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex justify-between mb-1">
-                        <span className="text-sm font-medium">Database Design</span>
-                        <span className="text-sm text-muted-foreground">85%</span>
-                      </div>
-                      <div className="w-full bg-accent h-2 rounded-full overflow-hidden">
-                        <div className="bg-primary h-full rounded-full" style={{ width: "85%" }}></div>
-                      </div>
-                    </div>
+                <Card className="overflow-hidden border border-border hover:border-primary/50 transition-colors duration-300">
+                  <div className="bg-gradient-to-r from-blue-50/50 to-blue-100/50 dark:from-blue-950/10 dark:to-blue-900/10 p-4 border-b flex items-center gap-2">
+                    <Code className="h-5 w-5 text-primary" />
+                    <h4 className="text-lg font-semibold">Technical Skills</h4>
                   </div>
-                </div>
+                  <CardContent className="p-6">
+                    <ScrollArea className="h-[320px] pr-4">
+                      <div className="space-y-6">
+                        {technicalSkills.map((skill, index) => (
+                          <div key={index} className="mb-6">
+                            <div className="flex justify-between mb-2">
+                              <span className="font-medium">{skill.name}</span>
+                              <span className="text-sm text-muted-foreground">{skill.value}%</span>
+                            </div>
+                            <Slider
+                              defaultValue={[skill.value]}
+                              max={100}
+                              step={1}
+                              disabled
+                              className="cursor-default"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </ScrollArea>
+                  </CardContent>
+                </Card>
 
-                <div>
-                  <h4 className="text-lg font-semibold mb-4">Soft Skills</h4>
-                  <div className="space-y-3">
-                    <div>
-                      <div className="flex justify-between mb-1">
-                        <span className="text-sm font-medium">Communication</span>
-                        <span className="text-sm text-muted-foreground">95%</span>
-                      </div>
-                      <div className="w-full bg-accent h-2 rounded-full overflow-hidden">
-                        <div className="bg-primary h-full rounded-full" style={{ width: "95%" }}></div>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex justify-between mb-1">
-                        <span className="text-sm font-medium">Teamwork</span>
-                        <span className="text-sm text-muted-foreground">90%</span>
-                      </div>
-                      <div className="w-full bg-accent h-2 rounded-full overflow-hidden">
-                        <div className="bg-primary h-full rounded-full" style={{ width: "90%" }}></div>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex justify-between mb-1">
-                        <span className="text-sm font-medium">Problem Solving</span>
-                        <span className="text-sm text-muted-foreground">85%</span>
-                      </div>
-                      <div className="w-full bg-accent h-2 rounded-full overflow-hidden">
-                        <div className="bg-primary h-full rounded-full" style={{ width: "85%" }}></div>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex justify-between mb-1">
-                        <span className="text-sm font-medium">Time Management</span>
-                        <span className="text-sm text-muted-foreground">80%</span>
-                      </div>
-                      <div className="w-full bg-accent h-2 rounded-full overflow-hidden">
-                        <div className="bg-primary h-full rounded-full" style={{ width: "80%" }}></div>
-                      </div>
-                    </div>
+                <Card className="overflow-hidden border border-border hover:border-primary/50 transition-colors duration-300">
+                  <div className="bg-gradient-to-r from-blue-50/50 to-blue-100/50 dark:from-blue-950/10 dark:to-blue-900/10 p-4 border-b flex items-center gap-2">
+                    <MessageSquare className="h-5 w-5 text-primary" />
+                    <h4 className="text-lg font-semibold">Soft Skills</h4>
                   </div>
-                </div>
+                  <CardContent className="p-6">
+                    <ScrollArea className="h-[320px] pr-4">
+                      <div className="space-y-6">
+                        {softSkills.map((skill, index) => (
+                          <div key={index} className="mb-6">
+                            <div className="flex justify-between mb-2">
+                              <span className="font-medium">{skill.name}</span>
+                              <span className="text-sm text-muted-foreground">{skill.value}%</span>
+                            </div>
+                            <Slider
+                              defaultValue={[skill.value]}
+                              max={100}
+                              step={1}
+                              disabled
+                              className="cursor-default"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </ScrollArea>
+                  </CardContent>
+                </Card>
               </div>
             </div>
           </div>
