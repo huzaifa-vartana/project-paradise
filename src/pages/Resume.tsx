@@ -3,7 +3,7 @@ import React from "react";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Button } from "@/components/ui/button";
-import { Download, Briefcase, GraduationCap, Lightbulb, Code, MessageSquare } from "lucide-react";
+import { Download, Briefcase, GraduationCap, Lightbulb, Code, MessageSquare, Calendar, MapPin } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -97,30 +97,52 @@ const Resume = () => {
           </div>
 
           <div className="mt-12 space-y-16">
-            {/* Experience Section */}
+            {/* Experience Section - Modernized */}
             <div className="animate-fade-in">
-              <div className="flex items-center gap-3 mb-6">
-                <Briefcase className="h-6 w-6 text-primary" />
+              <div className="flex items-center gap-3 mb-10">
+                <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg text-primary">
+                  <Briefcase className="h-6 w-6" />
+                </div>
                 <h3 className="text-2xl font-display font-semibold">Experience</h3>
               </div>
-              <div className="space-y-6">
+              
+              <div className="relative pl-8 border-l-2 border-blue-200 dark:border-blue-800 space-y-0">
                 {experiences.map((exp, index) => (
-                  <Card 
+                  <div 
                     key={exp.id} 
-                    className="p-6 border transition-all hover:border-primary/50 hover:shadow-lg hover:-translate-y-1 duration-300"
+                    className={`relative mb-10 transition-all animate-fade-up`}
+                    style={{ animationDelay: `${index * 100}ms` }}
                   >
-                    <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-4">
-                      <div>
-                        <div className="text-sm text-muted-foreground">{exp.period}</div>
-                        <div className="text-sm text-muted-foreground">{exp.location}</div>
-                      </div>
-                      <div>
-                        <h4 className="text-lg font-semibold">{exp.title}</h4>
-                        <div className="text-primary font-medium">{exp.company}</div>
-                        <p className="mt-2 text-muted-foreground">{exp.description}</p>
+                    <div className="absolute -left-[41px] p-2 bg-gradient-to-r from-primary to-blue-400 rounded-full">
+                      <div className="bg-white dark:bg-gray-950 rounded-full p-1">
+                        <Calendar className="h-4 w-4 text-primary" />
                       </div>
                     </div>
-                  </Card>
+                    
+                    <Card className="overflow-hidden shadow-md hover:shadow-xl border-0 bg-gradient-to-br from-white to-blue-50/30 dark:from-gray-900 dark:to-blue-950/10 transition-all duration-300 hover:-translate-y-1">
+                      <div className="p-6">
+                        <div className="space-y-3">
+                          <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-2">
+                            <div>
+                              <h4 className="text-xl font-semibold text-gradient">{exp.title}</h4>
+                              <div className="text-primary font-medium">{exp.company}</div>
+                            </div>
+                            <div className="flex flex-col items-start md:items-end">
+                              <div className="flex items-center text-sm font-medium text-muted-foreground gap-1 bg-gray-100 dark:bg-gray-800/60 px-3 py-1 rounded-full">
+                                <Calendar className="h-3.5 w-3.5 mr-1" />
+                                {exp.period}
+                              </div>
+                              <div className="flex items-center text-sm text-muted-foreground mt-1 gap-1">
+                                <MapPin className="h-3.5 w-3.5 mr-1" />
+                                {exp.location}
+                              </div>
+                            </div>
+                          </div>
+                          <p className="text-muted-foreground">{exp.description}</p>
+                        </div>
+                      </div>
+                    </Card>
+                  </div>
                 ))}
               </div>
             </div>
@@ -128,7 +150,9 @@ const Resume = () => {
             {/* Education Section */}
             <div className="animate-fade-in">
               <div className="flex items-center gap-3 mb-6">
-                <GraduationCap className="h-6 w-6 text-primary" />
+                <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg text-primary">
+                  <GraduationCap className="h-6 w-6" />
+                </div>
                 <h3 className="text-2xl font-display font-semibold">Education</h3>
               </div>
               <div className="space-y-6">
@@ -156,7 +180,9 @@ const Resume = () => {
             {/* Skills Section */}
             <div className="animate-fade-in">
               <div className="flex items-center gap-3 mb-6">
-                <Lightbulb className="h-6 w-6 text-primary" />
+                <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg text-primary">
+                  <Lightbulb className="h-6 w-6" />
+                </div>
                 <h3 className="text-2xl font-display font-semibold">Skills</h3>
               </div>
               
