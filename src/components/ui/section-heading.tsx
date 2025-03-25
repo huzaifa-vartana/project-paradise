@@ -24,10 +24,19 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
         className
       )}
     >
-      <h2 className="text-3xl md:text-4xl font-display font-semibold tracking-tight">{title}</h2>
+      <h2 className="text-3xl md:text-4xl font-display font-bold tracking-tight text-gradient inline-block">
+        {title}
+      </h2>
       {subtitle && (
-        <p className="mt-3 text-muted-foreground text-lg max-w-2xl mx-auto">{subtitle}</p>
+        <p className="mt-4 text-muted-foreground text-lg max-w-2xl mx-auto">
+          {subtitle}
+        </p>
       )}
+      <div className={cn(
+        "h-1 w-24 bg-gradient-to-r from-primary to-blue-400 rounded-full mt-4",
+        alignment === "center" && "mx-auto",
+        alignment === "right" && "ml-auto"
+      )} />
     </div>
   );
 };

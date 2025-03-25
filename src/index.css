@@ -5,33 +5,33 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 220 20% 15%;
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 20% 15%;
+    --card-foreground: 222 47% 11%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 20% 15%;
+    --popover-foreground: 222 47% 11%;
 
-    --primary: 220 70% 50%;
+    --primary: 221 83% 53%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
-    --secondary-foreground: 220 20% 15%;
+    --secondary-foreground: 222 47% 11%;
 
     --muted: 210 40% 96.1%;
-    --muted-foreground: 220 10% 40%;
+    --muted-foreground: 215 16% 47%;
 
     --accent: 220 70% 95%;
-    --accent-foreground: 220 70% 40%;
+    --accent-foreground: 222 47% 11%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 220 20% 90%;
-    --input: 220 20% 90%;
-    --ring: 220 70% 50%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 221 83% 53%;
 
     --radius: 0.5rem;
   }
@@ -44,6 +44,7 @@
 
   body {
     @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
 
   html {
@@ -53,7 +54,7 @@
 
 @layer components {
   .section-heading {
-    @apply text-3xl font-display font-semibold tracking-tight mb-6;
+    @apply text-3xl font-display font-semibold tracking-tight mb-8;
   }
 
   .card-hover {
@@ -67,4 +68,36 @@
   .nav-link-active {
     @apply text-foreground after:scale-x-100;
   }
+
+  .glassmorphism {
+    @apply backdrop-blur-md bg-white/70 border border-white/20;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary to-blue-400 bg-clip-text text-transparent;
+  }
+}
+
+.skill-badge {
+  @apply px-4 py-2 rounded-full font-medium text-sm transition-all duration-300;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.float-animation {
+  animation: float 3s ease-in-out infinite;
 }

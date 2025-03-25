@@ -29,7 +29,9 @@ const featuredProjects = [
 
 export const FeaturedProjects = () => {
   return (
-    <section className="py-20 bg-gradient-to-b from-background to-accent/20">
+    <section className="py-24 relative">
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(40%_35%_at_60%_40%,var(--tw-gradient-from)_0,var(--tw-gradient-to)_100%)] from-accent to-transparent"></div>
+      
       <div className="container mx-auto px-6 md:px-8">
         <SectionHeading
           title="Featured Projects"
@@ -37,13 +39,13 @@ export const FeaturedProjects = () => {
           alignment="center"
         />
 
-        <div className="space-y-24 mt-16">
+        <div className="space-y-32 mt-20">
           {featuredProjects.map((project, index) => (
             <div 
               key={project.id}
               className={`grid grid-cols-1 ${
                 index % 2 === 0 ? "md:grid-cols-[3fr_2fr]" : "md:grid-cols-[2fr_3fr] md:grid-flow-dense"
-              } gap-10 items-center`}
+              } gap-12 items-center`}
             >
               <div className={`space-y-6 ${index % 2 !== 0 && "md:col-start-2"}`}>
                 <h3 className="text-2xl md:text-3xl font-display font-semibold tracking-tight">
@@ -56,18 +58,18 @@ export const FeaturedProjects = () => {
                   {project.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="px-3 py-1 bg-accent text-accent-foreground text-sm rounded-full"
+                      className="px-3 py-1 bg-primary/10 text-primary text-sm rounded-full"
                     >
                       {tag}
                     </span>
                   ))}
                 </div>
-                <div className="flex flex-wrap gap-4 pt-2">
+                <div className="flex flex-wrap gap-6 pt-2">
                   <a 
                     href={project.githubUrl} 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground"
+                    className="inline-flex items-center text-sm text-foreground hover:text-primary transition-colors"
                   >
                     <Github className="mr-2 h-4 w-4" />
                     View Code
@@ -76,7 +78,7 @@ export const FeaturedProjects = () => {
                     href={project.liveUrl} 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground"
+                    className="inline-flex items-center text-sm text-foreground hover:text-primary transition-colors"
                   >
                     <ExternalLink className="mr-2 h-4 w-4" />
                     Live Demo
@@ -86,12 +88,18 @@ export const FeaturedProjects = () => {
 
               <div className={`${index % 2 === 0 && "md:col-start-2"}`}>
                 <div className="relative group card-hover">
-                  <div className="overflow-hidden rounded-lg border bg-card">
+                  <div className="overflow-hidden rounded-xl border shadow-sm bg-card">
                     <img
                       src={project.image}
                       alt={project.title}
-                      className="w-full h-full object-cover aspect-video"
+                      className="w-full h-full object-cover aspect-video transform group-hover:scale-105 transition-transform duration-500"
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+                      <div className="p-4 text-white">
+                        <h4 className="font-medium">{project.title}</h4>
+                        <p className="text-sm text-white/80">View project</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -99,8 +107,8 @@ export const FeaturedProjects = () => {
           ))}
         </div>
 
-        <div className="mt-16 text-center">
-          <Button asChild size="lg" className="group">
+        <div className="mt-20 text-center">
+          <Button asChild size="lg" className="group rounded-full">
             <Link to="/projects">
               View All Projects
               <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
