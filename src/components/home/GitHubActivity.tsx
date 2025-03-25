@@ -1,70 +1,68 @@
-
-import React, { useState, useEffect } from "react";
-import { Calendar, Github, Code, GitBranch, Star } from "lucide-react";
-import { SectionHeading } from "@/components/ui/section-heading";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { 
+import { Card, CardContent } from "@/components/ui/card";
+import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselPrevious,
-  CarouselNext
+  CarouselNext,
+  CarouselPrevious
 } from "@/components/ui/carousel";
-
-// Mock data - replace with real API call in production
-const MOCK_COMMITS = [
-  { date: "2023-06-15", count: 12, repo: "portfolio-website" },
-  { date: "2023-06-14", count: 8, repo: "data-visualization" },
-  { date: "2023-06-13", count: 15, repo: "api-service" },
-  { date: "2023-06-12", count: 5, repo: "mobile-app" },
-  { date: "2023-06-11", count: 23, repo: "backend-system" },
-  { date: "2023-06-10", count: 17, repo: "documentation" },
-  { date: "2023-06-09", count: 9, repo: "testing-framework" },
-  { date: "2023-06-08", count: 14, repo: "design-system" },
-  { date: "2023-06-07", count: 11, repo: "algorithm-challenges" },
-  { date: "2023-06-06", count: 16, repo: "game-project" },
-  { date: "2023-06-05", count: 7, repo: "machine-learning" },
-  { date: "2023-06-04", count: 19, repo: "web-scraper" },
-  { date: "2023-06-03", count: 10, repo: "utility-library" },
-  { date: "2023-06-02", count: 13, repo: "authentication-service" },
-];
-
-const MOCK_STATS = {
-  totalCommits: 2547,
-  repos: 42,
-  stars: 189,
-  contributions: 365,
-};
-
-interface CommitDay {
-  date: string;
-  count: number;
-  intensity: number;
-}
+import { SectionHeading } from "@/components/ui/section-heading";
+import { getContributionData, getGitHubStats, getRecentCommits, type CommitData, type ContributionDay } from "@/lib/github";
+import { Calendar, Code, GitBranch, Github, Star } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export const GitHubActivity = () => {
-  const [commitData, setCommitData] = useState<CommitDay[]>([]);
+  const [stats, setStats] = useState({
+    totalCommits: 0,
+    repos: 0,
+    stars: 0,
+    contributions: 0,
+  });
+  const [recentCommits, setRecentCommits] = useState<CommitData[]>([]);
+  const [commitData, setCommitData] = useState<ContributionDay[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   
   useEffect(() => {
-    // Generate activity grid data
-    const days = Array.from({ length: 365 }, (_, i) => {
-      const date = new Date();
-      date.setDate(date.getDate() - (364 - i));
-      const dateStr = date.toISOString().split('T')[0];
-      
-      // Random intensity between 0-4 (0: no commits, 4: many commits)
-      const randomIntensity = Math.floor(Math.random() * 5);
-      const count = randomIntensity === 0 ? 0 : Math.floor(Math.random() * (randomIntensity * 5)) + 1;
-      
-      return {
-        date: dateStr,
-        count,
-        intensity: randomIntensity
-      };
-    });
-    
-    setCommitData(days);
+    const fetchGitHubData = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        
+        // Check if GitHub token is available
+        if (!import.meta.env.VITE_GITHUB_TOKEN) {
+          throw new Error("GitHub token is not configured. Please check your .env file.");
+        }
+
+        const username = "huzaifa-vartana"; // Replace with your GitHub username
+        console.log("Fetching GitHub data for username:", username);
+        
+        const [statsData, commitsData, contributionData] = await Promise.all([
+          getGitHubStats(username),
+          getRecentCommits(username),
+          getContributionData(username),
+        ]);
+        
+        console.log("GitHub data fetched successfully:", {
+          stats: statsData,
+          commits: commitsData,
+          contributions: contributionData
+        });
+        
+        setStats(statsData);
+        setRecentCommits(commitsData);
+        setCommitData(contributionData);
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : "Failed to fetch GitHub data";
+        console.error("Error fetching GitHub data:", err);
+        setError(`Error: ${errorMessage}. Please check your GitHub token and username.`);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchGitHubData();
   }, []);
 
   const getIntensityClass = (intensity: number) => {
@@ -78,10 +76,25 @@ export const GitHubActivity = () => {
     }
   };
 
-  // Group days by month
-  const groupedByWeek: CommitDay[][] = [];
+  // Group days by week
+  const groupedByWeek: ContributionDay[][] = [];
   for (let i = 0; i < commitData.length; i += 7) {
     groupedByWeek.push(commitData.slice(i, i + 7));
+  }
+
+  if (error) {
+    return (
+      <section id="github-activity" className="py-20">
+        <div className="container mx-auto px-6 md:px-8">
+          <SectionHeading 
+            title="GitHub Activity" 
+            subtitle="A snapshot of my coding journey and contributions"
+            alignment="center"
+          />
+          <div className="text-center text-red-500">{error}</div>
+        </div>
+      </section>
+    );
   }
 
   return (
@@ -100,7 +113,7 @@ export const GitHubActivity = () => {
                 <Code className="text-primary" size={24} />
               </div>
               <div>
-                <h3 className="text-2xl font-bold">{MOCK_STATS.totalCommits.toLocaleString()}</h3>
+                <h3 className="text-2xl font-bold">{isLoading ? "..." : stats.totalCommits.toLocaleString()}</h3>
                 <p className="text-muted-foreground">Total Commits</p>
               </div>
             </CardContent>
@@ -112,7 +125,7 @@ export const GitHubActivity = () => {
                 <GitBranch className="text-primary" size={24} />
               </div>
               <div>
-                <h3 className="text-2xl font-bold">{MOCK_STATS.repos}</h3>
+                <h3 className="text-2xl font-bold">{isLoading ? "..." : stats.repos}</h3>
                 <p className="text-muted-foreground">Repositories</p>
               </div>
             </CardContent>
@@ -124,7 +137,7 @@ export const GitHubActivity = () => {
                 <Star className="text-primary" size={24} />
               </div>
               <div>
-                <h3 className="text-2xl font-bold">{MOCK_STATS.stars}</h3>
+                <h3 className="text-2xl font-bold">{isLoading ? "..." : stats.stars}</h3>
                 <p className="text-muted-foreground">Stars Received</p>
               </div>
             </CardContent>
@@ -140,7 +153,7 @@ export const GitHubActivity = () => {
               Contribution History
             </h3>
             <Button variant="outline" size="sm" className="gap-2 rounded-full" asChild>
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+              <a href="https://github.com/huzaifa" target="_blank" rel="noopener noreferrer">
                 <Github size={16} />
                 View on GitHub
               </a>
@@ -149,17 +162,21 @@ export const GitHubActivity = () => {
           
           <div className="overflow-auto pb-4">
             <div className="grid grid-flow-col gap-1 auto-cols-min min-w-[900px]">
-              {groupedByWeek.map((week, weekIndex) => (
-                <div key={weekIndex} className="grid grid-flow-row gap-1">
-                  {week.map((day, dayIndex) => (
-                    <div 
-                      key={`${weekIndex}-${dayIndex}`}
-                      className={`w-3 h-3 rounded-sm ${getIntensityClass(day.intensity)} transition-colors hover:ring-2 ring-gray-300 dark:ring-gray-600`}
-                      title={`${day.date}: ${day.count} commits`}
-                    />
-                  ))}
-                </div>
-              ))}
+              {isLoading ? (
+                <div className="col-span-full text-center py-8">Loading contribution data...</div>
+              ) : (
+                groupedByWeek.map((week, weekIndex) => (
+                  <div key={weekIndex} className="grid grid-flow-row gap-1">
+                    {week.map((day, dayIndex) => (
+                      <div 
+                        key={`${weekIndex}-${dayIndex}`}
+                        className={`w-3 h-3 rounded-sm ${getIntensityClass(day.intensity)} transition-colors hover:ring-2 ring-gray-300 dark:ring-gray-600`}
+                        title={`${day.date}: ${day.count} commits`}
+                      />
+                    ))}
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>
@@ -172,26 +189,39 @@ export const GitHubActivity = () => {
           
           <Carousel className="w-full">
             <CarouselContent>
-              {MOCK_COMMITS.map((commit, index) => (
-                <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+              {isLoading ? (
+                <CarouselItem className="md:basis-1/2 lg:basis-1/3">
                   <Card className="card-hover h-full bg-white dark:bg-gray-900 border-none shadow-md">
                     <CardContent className="p-6">
-                      <div className="flex justify-between items-start mb-2">
-                        <span className="text-primary font-medium">{commit.repo}</span>
-                        <span className="text-sm text-muted-foreground">{commit.date}</span>
-                      </div>
-                      <div className="flex items-center mt-4">
-                        <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center mr-3">
-                          <Code size={16} className="text-primary" />
-                        </div>
-                        <div>
-                          <p className="font-medium">{commit.count} commits</p>
-                        </div>
+                      <div className="animate-pulse">
+                        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-4"></div>
+                        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
                       </div>
                     </CardContent>
                   </Card>
                 </CarouselItem>
-              ))}
+              ) : (
+                recentCommits.map((commit, index) => (
+                  <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                    <Card className="card-hover h-full bg-white dark:bg-gray-900 border-none shadow-md">
+                      <CardContent className="p-6">
+                        <div className="flex justify-between items-start mb-2">
+                          <span className="text-primary font-medium">{commit.repo}</span>
+                          <span className="text-sm text-muted-foreground">{commit.date}</span>
+                        </div>
+                        <div className="flex items-center mt-4">
+                          <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center mr-3">
+                            <Code size={16} className="text-primary" />
+                          </div>
+                          <div>
+                            <p className="font-medium">{commit.count} commits</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </CarouselItem>
+                ))
+              )}
             </CarouselContent>
             <CarouselPrevious className="ml-2 -translate-y-1/2" />
             <CarouselNext className="mr-2 -translate-y-1/2" />

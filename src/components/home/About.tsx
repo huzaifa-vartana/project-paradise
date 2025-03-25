@@ -1,5 +1,3 @@
-
-import React from "react";
 import { SectionHeading } from "@/components/ui/section-heading";
 
 export const About = () => {
@@ -37,21 +35,69 @@ export const About = () => {
           </div>
         </div>
 
-        <div className="mt-16 p-8 rounded-xl bg-white shadow-sm">
-          <h3 className="text-xl font-display font-semibold mb-6 text-gradient">Skills</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {[
-              "JavaScript", "TypeScript", "React", "Next.js", "Node.js", "Express",
-              "MongoDB", "PostgreSQL", "Redux", "GraphQL", "REST API", "HTML/CSS",
-              "Tailwind CSS", "Git", "CI/CD", "Testing"
-            ].map((skill, index) => (
-              <div 
-                key={index} 
-                className="skill-badge"
-              >
-                {skill}
+        <div className="mt-16">
+          <h3 className="text-xl font-display font-semibold mb-8 text-gradient text-center">Skills</h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Programming Languages */}
+            <div className="p-6 rounded-xl bg-gradient-to-br from-white to-blue-50 shadow-sm">
+              <h4 className="text-lg font-display font-medium text-primary mb-4">Programming Languages</h4>
+              <div className="flex flex-wrap gap-2">
+                {["JavaScript", "TypeScript", "HTML/CSS"].map((skill, index) => (
+                  <div 
+                    key={index} 
+                    className="px-3 py-1.5 rounded-full bg-blue-50 text-blue-700 text-sm font-medium"
+                  >
+                    {skill}
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
+
+            {/* Frontend */}
+            <div className="p-6 rounded-xl bg-gradient-to-br from-white to-purple-50 shadow-sm">
+              <h4 className="text-lg font-display font-medium text-purple-600 mb-4">Frontend</h4>
+              <div className="flex flex-wrap gap-2">
+                {["React", "Next.js", "Redux", "Tailwind CSS"].map((skill, index) => (
+                  <div 
+                    key={index} 
+                    className="px-3 py-1.5 rounded-full bg-purple-50 text-purple-700 text-sm font-medium"
+                  >
+                    {skill}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Backend */}
+            <div className="p-6 rounded-xl bg-gradient-to-br from-white to-teal-50 shadow-sm">
+              <h4 className="text-lg font-display font-medium text-teal-600 mb-4">Backend</h4>
+              <div className="flex flex-wrap gap-2">
+                {["Node.js", "Express", "MongoDB", "PostgreSQL", "GraphQL", "REST API"].map((skill, index) => (
+                  <div 
+                    key={index} 
+                    className="px-3 py-1.5 rounded-full bg-teal-50 text-teal-700 text-sm font-medium"
+                  >
+                    {skill}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Tools & Others */}
+            <div className="p-6 rounded-xl bg-gradient-to-br from-white to-orange-50 shadow-sm">
+              <h4 className="text-lg font-display font-medium text-orange-600 mb-4">Tools & Others</h4>
+              <div className="flex flex-wrap gap-2">
+                {["Git", "CI/CD", "Testing"].map((skill, index) => (
+                  <div 
+                    key={index} 
+                    className="px-3 py-1.5 rounded-full bg-orange-50 text-orange-700 text-sm font-medium"
+                  >
+                    {skill}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
