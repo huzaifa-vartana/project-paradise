@@ -13,24 +13,24 @@ export const About = () => {
           <div className="space-y-4 p-6 rounded-xl bg-gradient-to-br from-white to-blue-50 shadow-sm">
             <h3 className="text-xl font-display font-semibold text-primary">Background</h3>
             <p className="text-muted-foreground">
-              I'm a software engineer with 5+ years of experience in building web and mobile applications. 
-              I have a strong foundation in full-stack development and a passion for creating exceptional user experiences.
+              I'm a Software Engineer with experience at Vartana and EMPG LABS, currently pursuing my MS in Computer Software Engineering at Northeastern University. 
+              I specialize in building scalable fintech solutions and have contributed to platforms handling $XXXM+ in GMV.
             </p>
           </div>
 
           <div className="space-y-4 p-6 rounded-xl bg-gradient-to-br from-white to-purple-50 shadow-sm">
             <h3 className="text-xl font-display font-semibold text-purple-600">Expertise</h3>
             <p className="text-muted-foreground">
-              My expertise includes JavaScript/TypeScript, React, Node.js, and various modern web technologies. 
-              I specialize in building responsive, accessible, and performant applications with clean and maintainable code.
+              My expertise spans full-stack development with a focus on cloud-native microservices, API design, and secure payment processing. 
+              I excel in Ruby on Rails, Go, Python, AWS services, and modern web technologies, with a proven track record of optimizing system performance and reliability.
             </p>
           </div>
 
           <div className="space-y-4 p-6 rounded-xl bg-gradient-to-br from-white to-teal-50 shadow-sm">
             <h3 className="text-xl font-display font-semibold text-teal-600">Interests</h3>
             <p className="text-muted-foreground">
-              Beyond coding, I'm interested in UX/UI design, open-source contribution, and staying updated with the latest tech trends. 
-              I enjoy solving complex problems and learning new technologies.
+              I'm passionate about distributed systems, high-performance computing, and generative AI. 
+              I actively contribute to open-source projects and enjoy solving complex technical challenges in fintech and cloud computing.
             </p>
           </div>
         </div>
@@ -43,7 +43,7 @@ export const About = () => {
             <div className="p-6 rounded-xl bg-gradient-to-br from-white to-blue-50 shadow-sm">
               <h4 className="text-lg font-display font-medium text-primary mb-4">Programming Languages</h4>
               <div className="flex flex-wrap gap-2">
-                {["JavaScript", "TypeScript", "HTML/CSS"].map((skill, index) => (
+                {["Java", "Python", "JavaScript", "TypeScript", "Go", "Ruby", "C/C++", "C#", "SQL", "Bash", "HTML", "CSS", "JSON", "XML"].map((skill, index) => (
                   <div 
                     key={index} 
                     className="px-3 py-1.5 rounded-full bg-blue-50 text-blue-700 text-sm font-medium"
@@ -54,11 +54,11 @@ export const About = () => {
               </div>
             </div>
 
-            {/* Frontend */}
+            {/* Frameworks */}
             <div className="p-6 rounded-xl bg-gradient-to-br from-white to-purple-50 shadow-sm">
-              <h4 className="text-lg font-display font-medium text-purple-600 mb-4">Frontend</h4>
+              <h4 className="text-lg font-display font-medium text-purple-600 mb-4">Frameworks</h4>
               <div className="flex flex-wrap gap-2">
-                {["React", "Next.js", "Redux", "Tailwind CSS"].map((skill, index) => (
+                {["React.js", "Next.js", "Node.js", "Spring Boot", "Ruby on Rails", "Flask", "GraphQL", "Express.js", "Angular", "Scikit", "TensorFlow", "TailwindCSS"].map((skill, index) => (
                   <div 
                     key={index} 
                     className="px-3 py-1.5 rounded-full bg-purple-50 text-purple-700 text-sm font-medium"
@@ -69,11 +69,11 @@ export const About = () => {
               </div>
             </div>
 
-            {/* Backend */}
+            {/* Databases */}
             <div className="p-6 rounded-xl bg-gradient-to-br from-white to-teal-50 shadow-sm">
-              <h4 className="text-lg font-display font-medium text-teal-600 mb-4">Backend</h4>
+              <h4 className="text-lg font-display font-medium text-teal-600 mb-4">Databases</h4>
               <div className="flex flex-wrap gap-2">
-                {["Node.js", "Express", "MongoDB", "PostgreSQL", "GraphQL", "REST API"].map((skill, index) => (
+                {["MySQL", "PostgreSQL", "MongoDB", "DynamoDB", "Redis", "MariaDB", "Neo4j"].map((skill, index) => (
                   <div 
                     key={index} 
                     className="px-3 py-1.5 rounded-full bg-teal-50 text-teal-700 text-sm font-medium"
@@ -88,7 +88,7 @@ export const About = () => {
             <div className="p-6 rounded-xl bg-gradient-to-br from-white to-orange-50 shadow-sm">
               <h4 className="text-lg font-display font-medium text-orange-600 mb-4">Tools & Others</h4>
               <div className="flex flex-wrap gap-2">
-                {["Git", "CI/CD", "Testing"].map((skill, index) => (
+                {["Git/GitHub", "Docker", "NewRelic", "AWS", "Metabase", "EC2", "S3", "SQS", "Lambda", "Spark", "Hive", "Kubernetes", "Azure", "Kafka", "RabbitMQ", "Figma", "CI/CD"].map((skill, index) => (
                   <div 
                     key={index} 
                     className="px-3 py-1.5 rounded-full bg-orange-50 text-orange-700 text-sm font-medium"

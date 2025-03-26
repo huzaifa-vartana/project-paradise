@@ -1,20 +1,19 @@
 
-import React from "react";
-import { PageLayout } from "@/components/layout/PageLayout";
-import { Hero } from "@/components/home/Hero";
-import { FeaturedProjects } from "@/components/home/FeaturedProjects";
 import { About } from "@/components/home/About";
+import { FeaturedProjects } from "@/components/home/FeaturedProjects";
 import { GitHubActivity } from "@/components/home/GitHubActivity";
+import { Hero } from "@/components/home/Hero";
 import { YouTubeHighlight } from "@/components/home/YouTubeHighlight";
+import { PageLayout } from "@/components/layout/PageLayout";
 
 const Index = () => {
   return (
     <PageLayout>
       <Hero />
-      <GitHubActivity />
-      <FeaturedProjects />
       <YouTubeHighlight />
       <About />
+      <GitHubActivity />
+      <FeaturedProjects />
     </PageLayout>
   );
 };

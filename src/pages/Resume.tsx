@@ -1,118 +1,123 @@
-
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { motion } from "framer-motion";
 import { Slider } from "@/components/ui/slider";
+import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 import {
   Award,
-  Download,
   Briefcase,
-  Sparkles,
-  GraduationCap,
   Calendar,
-  MapPin,
-  Lightbulb,
+  Check,
   Code,
-  MessageSquare,
+  Download,
   ExternalLink,
-  Check
+  GraduationCap,
+  Lightbulb,
+  MapPin,
+  MessageSquare,
+  Sparkles
 } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 const experiences = [
   {
     id: 1,
-    title: "Senior Frontend Developer",
-    company: "Tech Innovations Inc.",
+    title: "Software Engineer",
+    company: "Vartana",
     location: "San Francisco, CA",
-    period: "2021 - Present",
-    description: "Lead frontend development for multiple projects, mentoring junior developers, and implementing best practices. Reduced load times by 40% and improved accessibility scores.",
+    period: "Aug 2021 - Jan 2024",
+    description: "As one of the first engineering hires, contributed to scaling the fintech platform to $XXXM+ GMV, supporting 10x user growth. Led multiple critical initiatives to improve platform performance, reliability, and user experience.",
     achievements: [
-      "Led a team of 5 developers to successfully deliver a major application redesign",
-      "Implemented CI/CD pipeline reducing deployment time by 70%",
-      "Mentored 3 junior developers who were later promoted"
+      "Led migration to cloud-native microservices (AWS ECS, Lambda) using Rails/Go/Python, driving $XXM+ new GMV via improved loan approvals. Achieved 40% faster decisioning, 99.999% uptime, and 60% cost reduction",
+      "Architected OFAC/EIN verification platform using Persona API, Rails, React.js, reducing manual reviews by 85% for real-time KYC/AML screening",
+      "Developed secure payment processing infrastructure handling $XXM+ monthly transaction volume with 99.999% accuracy using AWS, Plaid, and bank APIs",
+      "Engineered GraphQL and RESTful APIs (Rails/Go/PostgreSQL) with 99.9999% uptime, supporting XXXX+ concurrent users. Optimized caching and databases, reducing response time by 40%",
+      "Implemented CI/CD with 98% test coverage for 99.99% reliability",
+      "Orchestrated metrics pipeline with New Relic and CloudWatch, reducing anomaly detection MTTR from 3hr to 5min"
     ],
-    tags: ["React", "TypeScript", "Next.js", "TailwindCSS"]
+    tags: ["Ruby on Rails", "Go", "Python", "AWS", "GraphQL", "PostgreSQL", "React.js", "CI/CD", "Microservices", "Fintech"]
   },
   {
     id: 2,
-    title: "Full Stack Developer",
-    company: "Digital Solutions LLC",
-    location: "Austin, TX",
-    period: "2018 - 2021",
-    description: "Developed and maintained web applications using React, Node.js, and MongoDB. Collaborated with design teams to implement responsive user interfaces.",
+    title: "Associate Software Engineer",
+    company: "EMPG LABS",
+    location: "Lahore, Punjab, Pakistan",
+    period: "Jul 2021 - Oct 2021",
+    description: "Worked on classifieds portals for the MENA, South Asia, and Southeast Asia regions as part of the Dubizzle Group.",
     achievements: [
-      "Reduced API response time by 65% through caching strategies",
-      "Built customer-facing dashboard increasing client satisfaction by 40%",
-      "Implemented responsive design patterns for all company products"
+      "Developed and maintained classifieds portal features",
+      "Worked with PostgreSQL and Sequelize.js for database operations",
+      "Contributed to improving user experience and platform functionality"
     ],
-    tags: ["Node.js", "Express", "MongoDB", "React"]
+    tags: ["PostgreSQL", "Sequelize.js", "Classifieds", "Web Development"]
   },
   {
     id: 3,
-    title: "Junior Developer",
-    company: "Web Creators Co.",
-    location: "Boston, MA",
-    period: "2016 - 2018",
-    description: "Assisted in building client websites, implemented pixel-perfect designs, and contributed to internal tooling development.",
+    title: "Project Trainee",
+    company: "Afiniti",
+    location: "Pakistan",
+    period: "Aug 2020",
+    description: "Completed a one-month internship program at Afiniti, gaining exposure to enterprise software development practices.",
     achievements: [
-      "Developed over 30 client websites with responsive designs",
-      "Created internal tool reducing project setup time by 30%",
-      "Collaborated with design team to improve UI/UX workflows"
+      "Gained hands-on experience with enterprise software development",
+      "Learned about industry best practices and development methodologies",
+      "Contributed to ongoing projects during the internship period"
     ],
-    tags: ["JavaScript", "HTML/CSS", "jQuery", "WordPress"]
-  },
+    tags: ["Internship", "Enterprise Software", "Development"]
+  }
 ];
 
 const education = [
   {
     id: 1,
-    degree: "Master of Science in Computer Science",
-    institution: "Stanford University",
-    location: "Stanford, CA",
-    period: "2014 - 2016",
-    description: "Specialized in Human-Computer Interaction and Data Visualization. Graduated with honors.",
+    degree: "Master of Science in Computer Software Engineering",
+    institution: "Northeastern University",
+    location: "Boston, MA",
+    period: "Expected December 2025",
+    description: "Specialized in Object-Oriented Design, HPC Machine Learning, Generative AI & LLMs, and Distributed Systems.",
     achievements: [
-      "Published paper on advanced data visualization techniques",
-      "Teaching assistant for Introduction to Programming course",
-      "Dean's List all semesters"
-    ]
+      "Currently pursuing advanced studies in software engineering",
+      "Focusing on cutting-edge technologies including Generative AI and Large Language Models",
+      "Developing expertise in distributed systems and high-performance computing"
+    ],
+    website: "https://coe.northeastern.edu/"
   },
   {
     id: 2,
-    degree: "Bachelor of Science in Software Engineering",
-    institution: "MIT",
-    location: "Cambridge, MA",
-    period: "2010 - 2014",
-    description: "Coursework included algorithm design, software architecture, and web development.",
+    degree: "Bachelor of Science in Computer Science",
+    institution: "Ghulam Ishaq Khan Institute of Engineering Sciences and Technology",
+    location: "Pakistan",
+    period: "2017 - 2021",
+    description: "Comprehensive study of computer science fundamentals and software development principles.",
     achievements: [
-      "Graduated with 3.8 GPA",
-      "Led development team in senior project winning first place",
-      "Software Engineering Club President (2012-2014)"
-    ]
-  },
+      "Graduated with strong foundation in computer science",
+      "Developed core programming and problem-solving skills",
+      "Completed rigorous coursework in software engineering"
+    ],
+    website: "https://giki.edu.pk/"
+  }
 ];
 
 const technicalSkills = [
+  { name: "Programming Languages", value: 95 },
   { name: "Frontend Development", value: 90 },
-  { name: "Backend Development", value: 80 },
-  { name: "Mobile Development", value: 70 },
+  { name: "Backend Development", value: 85 },
   { name: "Database Design", value: 85 },
-  { name: "UI/UX Design", value: 75 },
-  { name: "DevOps", value: 65 },
-  { name: "Cloud Services", value: 80 }
+  { name: "Cloud Services", value: 80 },
+  { name: "DevOps & CI/CD", value: 75 },
+  { name: "Machine Learning", value: 70 },
+  { name: "UI/UX Design", value: 75 }
 ];
 
 const softSkills = [
-  { name: "Communication", value: 95 },
-  { name: "Teamwork", value: 90 },
-  { name: "Problem Solving", value: 85 },
-  { name: "Time Management", value: 80 },
-  { name: "Leadership", value: 85 },
-  { name: "Adaptability", value: 88 },
-  { name: "Creativity", value: 82 }
+  { name: "Problem Solving", value: 95 },
+  { name: "Leadership", value: 90 },
+  { name: "Communication", value: 90 },
+  { name: "Time Management", value: 85 },
+  { name: "Collaboration", value: 90 },
+  { name: "Adaptability", value: 85 },
+  { name: "Attention to Detail", value: 95 }
 ];
 
 const Resume = () => {
@@ -131,6 +136,7 @@ const Resume = () => {
               <Button 
                 size="lg" 
                 className="group relative overflow-hidden hover:text-white transition-all duration-500 border-0 bg-white hover:bg-indigo-600 text-indigo-600 shadow-md hover:shadow-xl"
+                onClick={() => window.open('https://drive.google.com/file/d/16NUqfWEKOJ3E91tAblo8Bmr-09-avChE/view?usp=sharing', '_blank')}
               >
                 <span className="absolute inset-0 w-full h-full transition-all duration-500 ease-out rounded-md bg-gradient-to-r from-indigo-600 to-purple-600 opacity-0 group-hover:opacity-100"></span>
                 <span className="relative z-10 flex items-center gap-2">
@@ -312,6 +318,7 @@ const Resume = () => {
                             size="sm" 
                             variant="outline"
                             className="mt-6 rounded-full border-purple-200 hover:bg-purple-100 hover:text-purple-700 text-purple-600 dark:border-purple-800 dark:hover:bg-purple-900 dark:text-purple-400 w-full flex items-center justify-center"
+                            onClick={() => window.open(edu.website, '_blank')}
                           >
                             <ExternalLink className="h-3.5 w-3.5 mr-2" />
                             Visit Website

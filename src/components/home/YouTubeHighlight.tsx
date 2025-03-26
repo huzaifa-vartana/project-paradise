@@ -1,10 +1,8 @@
-
-import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { SectionHeading } from "@/components/ui/section-heading";
 import { Card, CardContent } from "@/components/ui/card";
-import { Youtube, Play, Video } from "lucide-react";
-import { Link } from "react-router-dom";
+import { SectionHeading } from "@/components/ui/section-heading";
+import { Play, Video, Youtube } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface YouTubeVideo {
   id: string;
@@ -17,14 +15,29 @@ interface YouTubeVideo {
 export const YouTubeHighlight = () => {
   const [videos, setVideos] = useState<YouTubeVideo[]>([]);
   const [loading, setLoading] = useState(true);
-  const channelId = "UCn5GD-PNXWmJ4mAXb7k6NIQ"; // CodeGreen channel ID
+  const [error, setError] = useState<string | null>(null);
+  const channelId = import.meta.env.VITE_YOUTUBE_CHANNEL_ID;
 
   useEffect(() => {
     const fetchYouTubeVideos = async () => {
       try {
-        // YouTube Data API v3 key (this is a public API key, so it's fine to include in the code)
-        const apiKey = "AIzaSyDKNyedCWc_Qa4RT-wnUbzjBuJrjdsfI6s";
+        setError(null);
+        const apiKey = import.meta.env.VITE_YOUTUBE_API_KEY;
         const maxResults = 3;
+        
+        console.log("Fetching videos for channel:", channelId);
+        
+        // First, verify the channel exists
+        const channelResponse = await fetch(
+          `https://www.googleapis.com/youtube/v3/channels?key=${apiKey}&id=${channelId}&part=snippet`
+        );
+        
+        const channelData = await channelResponse.json();
+        console.log("Channel data:", channelData);
+        
+        if (!channelData.items || channelData.items.length === 0) {
+          throw new Error(`Channel with ID ${channelId} not found`);
+        }
         
         // Fetch channel uploads
         const response = await fetch(
@@ -32,63 +45,73 @@ export const YouTubeHighlight = () => {
         );
         
         const data = await response.json();
+        console.log("Search response:", data);
         
-        if (data.items) {
-          // Get video IDs
-          const videoIds = data.items.map((item: any) => item.id.videoId).join(',');
-          
-          // Fetch video details including statistics and contentDetails
-          const videoDetailsResponse = await fetch(
-            `https://www.googleapis.com/youtube/v3/videos?key=${apiKey}&id=${videoIds}&part=snippet,contentDetails,statistics`
-          );
-          
-          const videoDetails = await videoDetailsResponse.json();
-          
-          // Format video data
-          const formattedVideos = videoDetails.items.map((item: any) => {
-            // Convert ISO 8601 duration to minutes:seconds
-            let duration = item.contentDetails.duration;
-            duration = duration.replace('PT', '');
-            let minutes = 0;
-            let seconds = 0;
-            
-            if (duration.includes('M')) {
-              const parts = duration.split('M');
-              minutes = parseInt(parts[0]);
-              duration = parts[1];
-            }
-            
-            if (duration.includes('S')) {
-              seconds = parseInt(duration.replace('S', ''));
-            }
-            
-            const formattedDuration = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
-            
-            // Format view count
-            const viewCount = parseInt(item.statistics.viewCount);
-            let formattedViews;
-            
-            if (viewCount >= 1000000) {
-              formattedViews = (viewCount / 1000000).toFixed(1) + 'M';
-            } else if (viewCount >= 1000) {
-              formattedViews = (viewCount / 1000).toFixed(1) + 'K';
-            } else {
-              formattedViews = viewCount.toString();
-            }
-            
-            return {
-              id: item.id,
-              title: item.snippet.title,
-              thumbnail: item.snippet.thumbnails.high.url,
-              views: formattedViews,
-              duration: formattedDuration
-            };
-          });
-          
-          setVideos(formattedVideos);
+        if (!data.items || data.items.length === 0) {
+          throw new Error("No videos found for this channel");
         }
+        
+        // Get video IDs
+        const videoIds = data.items.map((item: any) => item.id.videoId).join(',');
+        console.log("Video IDs:", videoIds);
+        
+        // Fetch video details including statistics and contentDetails
+        const videoDetailsResponse = await fetch(
+          `https://www.googleapis.com/youtube/v3/videos?key=${apiKey}&id=${videoIds}&part=snippet,contentDetails,statistics`
+        );
+        
+        const videoDetails = await videoDetailsResponse.json();
+        console.log("Video details:", videoDetails);
+        
+        if (!videoDetails.items || videoDetails.items.length === 0) {
+          throw new Error("No video details found");
+        }
+        
+        // Format video data
+        const formattedVideos = videoDetails.items.map((item: any) => {
+          // Convert ISO 8601 duration to minutes:seconds
+          let duration = item.contentDetails.duration;
+          duration = duration.replace('PT', '');
+          let minutes = 0;
+          let seconds = 0;
+          
+          if (duration.includes('M')) {
+            const parts = duration.split('M');
+            minutes = parseInt(parts[0]);
+            duration = parts[1];
+          }
+          
+          if (duration.includes('S')) {
+            seconds = parseInt(duration.replace('S', ''));
+          }
+          
+          const formattedDuration = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+          
+          // Format view count
+          const viewCount = parseInt(item.statistics.viewCount);
+          let formattedViews;
+          
+          if (viewCount >= 1000000) {
+            formattedViews = (viewCount / 1000000).toFixed(1) + 'M';
+          } else if (viewCount >= 1000) {
+            formattedViews = (viewCount / 1000).toFixed(1) + 'K';
+          } else {
+            formattedViews = viewCount.toString();
+          }
+          
+          return {
+            id: item.id,
+            title: item.snippet.title,
+            thumbnail: item.snippet.thumbnails.high.url,
+            views: formattedViews,
+            duration: formattedDuration
+          };
+        });
+        
+        setVideos(formattedVideos);
       } catch (error) {
         console.error("Error fetching YouTube videos:", error);
+        setError(error instanceof Error ? error.message : "Failed to fetch videos");
         // Fallback to sample data if there's an error
         setVideos([
           {
@@ -130,6 +153,12 @@ export const YouTubeHighlight = () => {
           alignment="center"
         />
 
+        {error && (
+          <div className="text-center text-red-500 mb-6">
+            Error: {error}
+          </div>
+        )}
+
         <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12 mt-10">
           <div className="w-full md:w-2/5 space-y-6 order-2 md:order-1">
             <div className="relative p-6 rounded-2xl overflow-hidden bg-gradient-to-br from-primary/10 to-blue-400/10 border border-border/30">
@@ -148,15 +177,11 @@ export const YouTubeHighlight = () => {
               <div className="space-y-4">
                 <div className="flex items-center">
                   <Video className="w-5 h-5 text-primary mr-3" />
-                  <p>Tutorials on modern web development</p>
+                  <p>Data Structure and Algorithms</p>
                 </div>
                 <div className="flex items-center">
                   <Play className="w-5 h-5 text-primary mr-3" />
-                  <p>Coding sessions and project builds</p>
-                </div>
-                <div className="flex items-center">
-                  <Youtube className="w-5 h-5 text-primary mr-3" />
-                  <p>Regular content on React, TypeScript, and more</p>
+                  <p>Leetcode Problems</p>
                 </div>
               </div>
 
