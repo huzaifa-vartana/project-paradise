@@ -5,6 +5,7 @@ import { Hero } from "@/components/home/Hero";
 import { FeaturedProjects } from "@/components/home/FeaturedProjects";
 import { About } from "@/components/home/About";
 import { GitHubActivity } from "@/components/home/GitHubActivity";
+import { YouTubeHighlight } from "@/components/home/YouTubeHighlight";
 
 const Index = () => {
   return (
@@ -12,6 +13,7 @@ const Index = () => {
       <Hero />
       <GitHubActivity />
       <FeaturedProjects />
+      <YouTubeHighlight />
       <About />
     </PageLayout>
   );
