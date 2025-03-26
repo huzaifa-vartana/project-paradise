@@ -1,4 +1,3 @@
-
 name: Deploy to GitHub Pages
 
 on:
@@ -28,8 +27,6 @@ jobs:
         
       - name: Build
         run: npm run build
-        env:
-          VITE_BASE_PATH: "/${{ github.repository_name }}"
         
       - name: Setup Pages
         uses: actions/configure-pages@v4
