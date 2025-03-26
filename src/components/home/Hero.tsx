@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Briefcase, Calendar, Code2, FileText, Github, GraduationCap, Linkedin, Mail, MapPin, Sparkles } from "lucide-react";
+import { BsStackOverflow } from "react-icons/bs";
 import { Link } from "react-router-dom";
 
 export const Hero = () => {
@@ -7,28 +8,28 @@ export const Hero = () => {
     {
       icon: MapPin,
       title: "Location",
-      description: "San Francisco, CA",
+      description: "Boston, MA, USA",
       color: "from-blue-500/20 to-cyan-500/30",
       delay: "0.1s"
     },
     {
       icon: GraduationCap,
       title: "Education",
-      description: "Stanford University",
+      description: "Northeastern University",
       color: "from-purple-500/20 to-pink-500/30",
       delay: "0.2s"
     },
     {
       icon: Briefcase,
       title: "Experience",
-      description: "5+ Years",
+      description: "2+ Years",
       color: "from-green-500/20 to-emerald-500/30",
       delay: "0.3s"
     },
     {
       icon: Calendar,
       title: "Available For",
-      description: "Full-time & Freelance",
+      description: "Internships & Full-time",
       color: "from-orange-500/20 to-red-500/30",
       delay: "0.4s"
     }
@@ -57,7 +58,7 @@ export const Hero = () => {
             </div>
             
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold tracking-tight leading-tight">
-              <span className="text-gradient">Hi, I'm John Doe</span>
+              <span className="text-gradient">Hi, I'm Huzaifa Malik</span>
               <span className="block mt-2 text-3xl md:text-4xl lg:text-5xl text-foreground/80">
                 Crafting Digital Excellence
               </span>
@@ -76,10 +77,7 @@ export const Hero = () => {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="rounded-full hover:bg-primary/5">
-                <Link to="/contact">Contact Me</Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="rounded-full hover:bg-primary/5">
-                <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="flex items-center">
+                <a href="/resume" rel="noopener noreferrer" className="flex items-center">
                   <FileText className="mr-2 h-4 w-4" />
                   Resume
                 </a>
@@ -88,7 +86,7 @@ export const Hero = () => {
 
             <div className="flex items-center space-x-4 pt-2">
               <a 
-                href="https://github.com" 
+                href="https://github.com/huzaifa-vartana"
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-foreground/80 hover:text-foreground transition-all p-2 rounded-full hover:bg-primary/10 hover:scale-110"
@@ -97,7 +95,7 @@ export const Hero = () => {
                 <Github size={20} />
               </a>
               <a 
-                href="https://linkedin.com" 
+                href="https://www.linkedin.com/in/huzaifa-malik-37457b135/" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-foreground/80 hover:text-foreground transition-all p-2 rounded-full hover:bg-primary/10 hover:scale-110"
@@ -106,11 +104,20 @@ export const Hero = () => {
                 <Linkedin size={20} />
               </a>
               <a 
-                href="mailto:hello@example.com" 
+                href="mailto:huzaifamalik47@gmail.com" 
                 className="text-foreground/80 hover:text-foreground transition-all p-2 rounded-full hover:bg-primary/10 hover:scale-110"
                 aria-label="Email"
               >
                 <Mail size={20} />
+              </a>
+              <a 
+                href="https://stackoverflow.com/users/12979235/huzaifa-malik" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-foreground/80 hover:text-foreground transition-all p-2 rounded-full hover:bg-primary/10 hover:scale-110"
+                aria-label="Stack Overflow"
+              >
+                <BsStackOverflow size={20} />
               </a>
             </div>
           </div>

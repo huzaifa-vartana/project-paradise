@@ -153,7 +153,7 @@ export const GitHubActivity = () => {
               Contribution History
             </h3>
             <Button variant="outline" size="sm" className="gap-2 rounded-full" asChild>
-              <a href="https://github.com/huzaifa" target="_blank" rel="noopener noreferrer">
+              <a href="https://github.com/huzaifa-vartana" target="_blank" rel="noopener noreferrer">
                 <Github size={16} />
                 View on GitHub
               </a>

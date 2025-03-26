@@ -1,10 +1,9 @@
-
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { cn } from "@/lib/utils";
-import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
+import { Menu, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 type NavItem = {
   label: string;
@@ -15,8 +14,6 @@ const navItems: NavItem[] = [
   { label: "Home", href: "/" },
   { label: "Projects", href: "/projects" },
   { label: "Resume", href: "/resume" },
-  { label: "Blog", href: "/blog" },
-  { label: "Contact", href: "/contact" },
 ];
 
 export const Navbar = () => {
@@ -50,7 +47,7 @@ export const Navbar = () => {
             to="/" 
             className="text-xl md:text-2xl font-display font-semibold tracking-tight animate-fade-in"
           >
-            John Doe
+            Huzaifa Malik
           </Link>
 
           {isMobile ? (
