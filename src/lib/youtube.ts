@@ -1,7 +1,6 @@
-
 // Cache key for localStorage
 export const YOUTUBE_CACHE_KEY = 'youtube_videos_cache';
-export const YOUTUBE_CACHE_EXPIRY = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+export const YOUTUBE_CACHE_EXPIRY = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds (increased from 24 hours)
 
 export interface YouTubeVideo {
   id: string;
@@ -70,5 +69,69 @@ export const formatViewCount = (viewCount: number): string => {
     return (viewCount / 1000).toFixed(1) + 'K';
   } else {
     return viewCount.toString();
+  }
+};
+
+// New utility functions for optimized caching
+export const getYouTubeCacheStatus = (): { 
+  hasCache: boolean, 
+  isExpired: boolean, 
+  lastFetched: number | null,
+  videos: YouTubeVideo[] | null 
+} => {
+  try {
+    const cachedData = localStorage.getItem(YOUTUBE_CACHE_KEY);
+    
+    if (!cachedData) {
+      return { hasCache: false, isExpired: true, lastFetched: null, videos: null };
+    }
+    
+    const { videos, timestamp } = JSON.parse(cachedData);
+    const isExpired = Date.now() - timestamp > YOUTUBE_CACHE_EXPIRY;
+    
+    return { 
+      hasCache: true, 
+      isExpired, 
+      lastFetched: timestamp,
+      videos 
+    };
+  } catch (e) {
+    return { hasCache: false, isExpired: true, lastFetched: null, videos: null };
+  }
+};
+
+export const saveYouTubeCache = (videos: YouTubeVideo[]): void => {
+  try {
+    localStorage.setItem(YOUTUBE_CACHE_KEY, JSON.stringify({
+      videos,
+      timestamp: Date.now()
+    }));
+  } catch (e) {
+    console.error("Failed to save YouTube cache:", e);
+  }
+};
+
+// Last API fetch tracking to prevent excessive retries
+const API_FETCH_TRACKING_KEY = 'youtube_last_fetch_attempt';
+
+export const canAttemptFetch = (): boolean => {
+  try {
+    const lastAttempt = localStorage.getItem(API_FETCH_TRACKING_KEY);
+    
+    if (!lastAttempt) return true;
+    
+    const timeSinceLastAttempt = Date.now() - parseInt(lastAttempt);
+    // Only allow a new fetch attempt after 4 hours if the previous one failed
+    return timeSinceLastAttempt > 4 * 60 * 60 * 1000;
+  } catch (e) {
+    return true;
+  }
+};
+
+export const recordFetchAttempt = (): void => {
+  try {
+    localStorage.setItem(API_FETCH_TRACKING_KEY, Date.now().toString());
+  } catch (e) {
+    console.error("Failed to record fetch attempt:", e);
   }
 };
