@@ -1,5 +1,7 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Play, Video, Youtube } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -12,72 +14,126 @@ interface YouTubeVideo {
   duration: string;
 }
 
+// Sample data for fallback when API requests fail or quota is exceeded
+const sampleVideos: YouTubeVideo[] = [
+  {
+    id: "sample1",
+    title: "Building Modern Web Applications",
+    views: "1.2K",
+    duration: "15:24",
+    thumbnail: "https://i.ytimg.com/vi/jS4aFq5-91M/maxresdefault.jpg",
+  },
+  {
+    id: "sample2",
+    title: "React Hooks Deep Dive",
+    views: "3.5K",
+    duration: "22:47",
+    thumbnail: "https://i.ytimg.com/vi/O6P86uwfdR0/maxresdefault.jpg",
+  },
+  {
+    id: "sample3",
+    title: "Mastering TypeScript",
+    views: "2.8K",
+    duration: "18:33",
+    thumbnail: "https://i.ytimg.com/vi/30LWjhZzg50/maxresdefault.jpg",
+  },
+];
+
+// Cache key for localStorage
+const CACHE_KEY = 'youtube_videos_cache';
+const CACHE_EXPIRY = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
 export const YouTubeHighlight = () => {
   const [videos, setVideos] = useState<YouTubeVideo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const channelId = import.meta.env.VITE_YOUTUBE_CHANNEL_ID;
+  const channelId = import.meta.env.VITE_YOUTUBE_CHANNEL_ID || "UCmXmlB4-HJytD7wek0Uo97A"; // Default to a channel ID if env var is missing
 
   useEffect(() => {
     const fetchYouTubeVideos = async () => {
       try {
         setError(null);
-        const apiKey = import.meta.env.VITE_YOUTUBE_API_KEY;
-        const maxResults = 3;
         
-        console.log("Fetching videos for channel:", channelId);
-        
-        // First, verify the channel exists
-        const channelResponse = await fetch(
-          `https://www.googleapis.com/youtube/v3/channels?key=${apiKey}&id=${channelId}&part=snippet`
-        );
-        
-        const channelData = await channelResponse.json();
-        console.log("Channel data:", channelData);
-        
-        if (!channelData.items || channelData.items.length === 0) {
-          throw new Error(`Channel with ID ${channelId} not found`);
+        // Try to get videos from cache first
+        const cachedData = localStorage.getItem(CACHE_KEY);
+        if (cachedData) {
+          const { videos, timestamp } = JSON.parse(cachedData);
+          const isExpired = Date.now() - timestamp > CACHE_EXPIRY;
+          
+          if (!isExpired) {
+            console.log("Using cached YouTube data");
+            setVideos(videos);
+            setLoading(false);
+            return;
+          } else {
+            console.log("Cache expired, fetching fresh data");
+          }
         }
         
-        // Fetch channel uploads
+        const apiKey = import.meta.env.VITE_YOUTUBE_API_KEY;
+        
+        if (!apiKey) {
+          console.log("No API key found, using sample data");
+          setVideos(sampleVideos);
+          setLoading(false);
+          return;
+        }
+        
+        // Single request to get videos with all needed details in one go
+        // Using the search endpoint with type=video and part=snippet
         const response = await fetch(
-          `https://www.googleapis.com/youtube/v3/search?key=${apiKey}&channelId=${channelId}&part=snippet,id&order=date&maxResults=${maxResults}`
+          `https://www.googleapis.com/youtube/v3/search?key=${apiKey}&channelId=${channelId}&part=snippet&order=date&maxResults=3&type=video`
         );
         
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error("YouTube API error:", errorData);
+          throw new Error(`API error: ${errorData?.error?.message || response.statusText}`);
+        }
+        
         const data = await response.json();
-        console.log("Search response:", data);
         
         if (!data.items || data.items.length === 0) {
           throw new Error("No videos found for this channel");
         }
         
-        // Get video IDs
+        // Get video IDs for a single follow-up request to get additional details
         const videoIds = data.items.map((item: any) => item.id.videoId).join(',');
-        console.log("Video IDs:", videoIds);
         
-        // Fetch video details including statistics and contentDetails
+        // One additional request to get statistics and content details
         const videoDetailsResponse = await fetch(
-          `https://www.googleapis.com/youtube/v3/videos?key=${apiKey}&id=${videoIds}&part=snippet,contentDetails,statistics`
+          `https://www.googleapis.com/youtube/v3/videos?key=${apiKey}&id=${videoIds}&part=contentDetails,statistics`
         );
         
-        const videoDetails = await videoDetailsResponse.json();
-        console.log("Video details:", videoDetails);
-        
-        if (!videoDetails.items || videoDetails.items.length === 0) {
-          throw new Error("No video details found");
+        if (!videoDetailsResponse.ok) {
+          const errorData = await videoDetailsResponse.json();
+          console.error("YouTube API video details error:", errorData);
+          throw new Error(`API error: ${errorData?.error?.message || videoDetailsResponse.statusText}`);
         }
         
-        // Format video data
-        const formattedVideos = videoDetails.items.map((item: any) => {
-          // Convert ISO 8601 duration to minutes:seconds
-          let duration = item.contentDetails.duration;
+        const videoDetails = await videoDetailsResponse.json();
+        
+        // Format videos by combining data from both requests
+        const formattedVideos = data.items.map((searchItem: any) => {
+          const videoId = searchItem.id.videoId;
+          const detailsItem = videoDetails.items.find((item: any) => item.id === videoId);
+          
+          // Format duration from ISO 8601
+          let duration = detailsItem?.contentDetails?.duration || 'PT0M0S';
           duration = duration.replace('PT', '');
           let minutes = 0;
           let seconds = 0;
           
+          if (duration.includes('H')) {
+            const parts = duration.split('H');
+            const hours = parseInt(parts[0]);
+            minutes += hours * 60;
+            duration = parts[1];
+          }
+          
           if (duration.includes('M')) {
             const parts = duration.split('M');
-            minutes = parseInt(parts[0]);
+            minutes += parseInt(parts[0]);
             duration = parts[1];
           }
           
@@ -88,7 +144,7 @@ export const YouTubeHighlight = () => {
           const formattedDuration = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
           
           // Format view count
-          const viewCount = parseInt(item.statistics.viewCount);
+          const viewCount = parseInt(detailsItem?.statistics?.viewCount || '0');
           let formattedViews;
           
           if (viewCount >= 1000000) {
@@ -100,42 +156,36 @@ export const YouTubeHighlight = () => {
           }
           
           return {
-            id: item.id,
-            title: item.snippet.title,
-            thumbnail: item.snippet.thumbnails.high.url,
+            id: videoId,
+            title: searchItem.snippet.title,
+            thumbnail: searchItem.snippet.thumbnails.high?.url || searchItem.snippet.thumbnails.default?.url,
             views: formattedViews,
             duration: formattedDuration
           };
         });
         
+        // Cache the results
+        localStorage.setItem(CACHE_KEY, JSON.stringify({
+          videos: formattedVideos,
+          timestamp: Date.now()
+        }));
+        
         setVideos(formattedVideos);
       } catch (error) {
         console.error("Error fetching YouTube videos:", error);
         setError(error instanceof Error ? error.message : "Failed to fetch videos");
-        // Fallback to sample data if there's an error
-        setVideos([
-          {
-            id: "1",
-            title: "Building Modern Web Applications",
-            views: "1.2K",
-            duration: "15:24",
-            thumbnail: "https://i.ytimg.com/vi/jS4aFq5-91M/maxresdefault.jpg",
-          },
-          {
-            id: "2",
-            title: "React Hooks Deep Dive",
-            views: "3.5K",
-            duration: "22:47",
-            thumbnail: "https://i.ytimg.com/vi/O6P86uwfdR0/maxresdefault.jpg",
-          },
-          {
-            id: "3",
-            title: "Mastering TypeScript",
-            views: "2.8K",
-            duration: "18:33",
-            thumbnail: "https://i.ytimg.com/vi/30LWjhZzg50/maxresdefault.jpg",
-          },
-        ]);
+        
+        // First try to use cached data even if it's expired
+        const cachedData = localStorage.getItem(CACHE_KEY);
+        if (cachedData) {
+          const { videos } = JSON.parse(cachedData);
+          console.log("Using expired cache as fallback");
+          setVideos(videos);
+        } else {
+          // Fall back to sample data
+          console.log("No cache available, using sample data");
+          setVideos(sampleVideos);
+        }
       } finally {
         setLoading(false);
       }
@@ -154,8 +204,11 @@ export const YouTubeHighlight = () => {
         />
 
         {error && (
-          <div className="text-center text-red-500 mb-6">
-            Error: {error}
+          <div className="text-center mb-6">
+            <p className="text-yellow-600 dark:text-yellow-400 inline-flex items-center gap-2 bg-yellow-100 dark:bg-yellow-900/30 px-4 py-2 rounded-full text-sm">
+              <Youtube className="w-4 h-4" />
+              Using cached or sample videos due to API limit. {error}
+            </p>
           </div>
         )}
 
@@ -207,11 +260,11 @@ export const YouTubeHighlight = () => {
                 {[1, 2, 3].map((i) => (
                   <Card key={i} className="overflow-hidden card-hover backdrop-blur-sm bg-background/50 border border-border/50">
                     <div className="relative">
-                      <div className="w-full aspect-video bg-gray-200 animate-pulse"></div>
+                      <Skeleton className="w-full aspect-video" />
                     </div>
                     <CardContent className="p-4">
-                      <div className="h-5 bg-gray-200 rounded animate-pulse mb-2"></div>
-                      <div className="h-4 bg-gray-200 rounded animate-pulse w-1/3"></div>
+                      <Skeleton className="h-5 w-full mb-2" />
+                      <Skeleton className="h-4 w-1/3" />
                     </CardContent>
                   </Card>
                 ))}
