@@ -1,5 +1,6 @@
 
 import { About } from "@/components/home/About";
+import { FeaturedProjects } from "@/components/home/FeaturedProjects";
 import { GitHubActivity } from "@/components/home/GitHubActivity";
 import { Hero } from "@/components/home/Hero";
 import { YouTubeHighlight } from "@/components/home/YouTubeHighlight";
@@ -12,7 +13,7 @@ const Index = () => {
       <YouTubeHighlight />
       <About />
       <GitHubActivity />
-      {/* <FeaturedProjects /> */}
+      <FeaturedProjects />
     </PageLayout>
   );
 };
